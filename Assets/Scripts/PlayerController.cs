@@ -1,8 +1,10 @@
 using System;
+using Unity.Cinemachine;
 using Unity.Collections;
 using Unity.VisualScripting;
 using UnityEditor;
 using UnityEngine;
+using UnityEngine.Audio;
 using UnityEngine.InputSystem;
 using UnityEngine.SceneManagement;
 using UnityEngine.UI;
@@ -10,27 +12,74 @@ using UnityEngine.UI;
 public class PlayerController : MonoBehaviour
 {
     private InputAction move;
+    private InputAction carry;
     private Vector3 playerMovement;
     private Vector2 moveDirection;
     [SerializeField] private float jumpValue;
     private Rigidbody rb;
     [SerializeField] private float playerSpeed;
+    [SerializeField] private GameObject player;
+    public float sphereRadius;
+    private Collider[] rampCollider;
+    private bool isHolding;
+    private bool canHold;
 
     // Start is called once before the first execution of Update after the MonoBehaviour is created
     void Start()
     {
-
+        isHolding = false;
+        canHold = true;
         rb = GetComponent<Rigidbody>();
         move = InputSystem.actions.FindAction("Move");
-      
+        carry = InputSystem.actions.FindAction("Interact");
 
         move.performed += MovePerformed;
         move.canceled += MoveCanceled;
+        carry.performed += InteractPerformed;
+        carry.canceled += InteractCanceled;
         
     }
 
+    private void InteractPerformed(InputAction.CallbackContext obj)
+    {
+        if (canHold == true)
+        {
+            if (isHolding == false)
+            {
+                rampCollider = Physics.OverlapSphere(transform.position, sphereRadius, LayerMask.GetMask("Ramps"));
+                if (rampCollider.Length >= 1)
+                {
 
-    
+                    rampCollider[0].transform.position = new Vector3(player.transform.position.x,
+                        player.transform.position.y, player.transform.position.z + 2);
+                    rampCollider[0].transform.SetParent(player.transform);
+                    rampCollider[0].GetComponent<Rigidbody>().isKinematic = true;
+                    rampCollider[0].GetComponent<MeshCollider>().isTrigger = true;
+
+                    isHolding = true;
+                }
+            }
+            else if (isHolding == true)
+            {
+                rampCollider[0].GetComponent<Rigidbody>().isKinematic = false;
+                rampCollider[0].GetComponent<MeshCollider>().isTrigger = false;
+
+                rampCollider[0].transform.SetParent(null);
+                rampCollider = null;
+                isHolding = false;
+            }
+        }
+    }
+
+    private void InteractCanceled(InputAction.CallbackContext obj)
+    {
+        
+
+
+    }
+
+
+
     /// <summary>
     /// Starts moving the player.
     /// </summary>
@@ -45,9 +94,20 @@ public class PlayerController : MonoBehaviour
         playerMovement = Vector3.zero;
     }
 
+    void OnCollisionEnter(Collision col)
+    {
+        if (col.gameObject.tag == "Ramp")
+        {
+            canHold = false;
+        }
 
+    }
+    void OnCollisionExit(Collision col)
+    {
+        canHold = true;
+    }
     // Update is called once per frame
-    void FixedUpdate()
+    void Update()
     {
         if (Input.GetKeyDown(KeyCode.R))
         {
@@ -68,6 +128,8 @@ public class PlayerController : MonoBehaviour
     {
         move.performed -= MovePerformed;
         move.canceled -= MoveCanceled;
+        carry.performed -= InteractPerformed;
+        carry.canceled -= InteractCanceled;
         
     }
 }
