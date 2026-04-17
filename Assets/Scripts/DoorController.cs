@@ -30,6 +30,7 @@ public class DoorController : MonoBehaviour
         
     }
 
+    //Plays a small cutscene when unlocking a door.
     private IEnumerator lookAtDoor()
     {
         playerCamera.Follow = door.transform;

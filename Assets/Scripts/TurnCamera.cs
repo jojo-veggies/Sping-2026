@@ -45,6 +45,8 @@ public class TurnCamera : MonoBehaviour
         player.transform.rotation = Quaternion.Euler(0, cameraTransform.eulerAngles.y, 0);
 
     }
+
+    //Stops errors.
     public void OnDestroy()
     {
         rightClick.performed -= CameraMovePerformed;

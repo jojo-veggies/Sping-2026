@@ -40,6 +40,7 @@ public class PlayerController : MonoBehaviour
         
     }
 
+    //Picks up a ramp based on parameters: if there isn't one being held, and if the player isn't on it.
     private void InteractPerformed(InputAction.CallbackContext obj)
     {
         if (canHold == true)
@@ -70,7 +71,7 @@ public class PlayerController : MonoBehaviour
             }
         }
     }
-
+    //Does nothing, but I don't actually know what'll happen if i delete it, so it stays.
     private void InteractCanceled(InputAction.CallbackContext obj)
     {
         
@@ -94,6 +95,8 @@ public class PlayerController : MonoBehaviour
         playerMovement = Vector3.zero;
     }
 
+
+    //Makes it not possible to hold a ramp while standing on it.
     void OnCollisionEnter(Collision col)
     {
         if (col.gameObject.tag == "Ramp")
@@ -102,6 +105,8 @@ public class PlayerController : MonoBehaviour
         }
 
     }
+
+    //Makes it possible to hold ramps again.
     void OnCollisionExit(Collision col)
     {
         canHold = true;
@@ -109,6 +114,8 @@ public class PlayerController : MonoBehaviour
     // Update is called once per frame
     void Update()
     {
+
+        //Restarts.
         if (Input.GetKeyDown(KeyCode.R))
         {
             SceneManager.LoadScene(SceneManager.GetActiveScene().name);
