@@ -13,12 +13,13 @@ public class DoorController : MonoBehaviour
     [SerializeField] private CinemachineCamera playerCamera;
     [SerializeField] private GameObject door;
     [SerializeField] private GameObject player;
-
+   
     //When the door is collided with by the player, if both keys have been collected, moves to the next scene.
     private void OnCollisionEnter(Collision collision)
     {
         if(collision.gameObject.tag == "Player" && keyNumber == 1)
         {
+            PlayerController.LevelComplete();
             SceneManager.LoadSceneAsync(SceneManager.GetActiveScene().buildIndex + 1);
         }
     }
