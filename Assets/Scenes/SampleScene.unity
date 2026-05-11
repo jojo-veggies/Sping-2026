@@ -3355,7 +3355,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: e32eb4fbde1f013448eb88222dc21850, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  teleportPoint: {fileID: 0}
+  teleportPoint: {fileID: 1435757295}
 --- !u!64 &1035685891
 MeshCollider:
   m_ObjectHideFlags: 0
