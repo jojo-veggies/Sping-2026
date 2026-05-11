@@ -18,12 +18,13 @@ public class MainMenuController : MonoBehaviour
         
     }
 
+    //Opens the level select screen.
     public void enterLevelSelect()
     {
         levelSelect.SetActive(true);
         normalScreen.SetActive(false);
     }
-
+    //Exits the level select screen.
     public void exitLevelSelect()
     {
 
@@ -31,6 +32,7 @@ public class MainMenuController : MonoBehaviour
         normalScreen.SetActive(true);
 
     }
+    //Loads levels. For levels 1,2, and 3, checks HowMany to see if the level has already been reached.
     public void LoadTutorial() { SceneManager.LoadSceneAsync("SampleScene"); }
 
     public void LoadLvl1() { 

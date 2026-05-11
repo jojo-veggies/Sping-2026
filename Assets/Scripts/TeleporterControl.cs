@@ -2,7 +2,7 @@ using UnityEngine;
 
 public class TeleporterControl : MonoBehaviour
 {
-    //The point the teleporter will bring the palyer to.
+    //The point the teleporter will bring the player to.
     [SerializeField] private GameObject teleportPoint;
 
    
