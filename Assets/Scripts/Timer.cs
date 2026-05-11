@@ -20,6 +20,7 @@ public class Timer : MonoBehaviour
     {
     }
 
+    //Starts ticking the timer.
     private IEnumerator BeginClock()
     {
         yield return new WaitForSeconds(1);
@@ -29,6 +30,7 @@ public class Timer : MonoBehaviour
 
     }
 
+    //Goes back to the menu. Put here to save me time when attatching scripts.
     public void BackToMenu()
     {
        

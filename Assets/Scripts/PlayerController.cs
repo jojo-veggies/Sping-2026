@@ -147,17 +147,21 @@ public class PlayerController : MonoBehaviour
             moveDirection.y * playerSpeed));
     }
 
+
+    //Unpauses the game.
     public void unpause()
     {
         Time.timeScale = 1;
         isPaused = false;
         PauseMenu.SetActive(false);
     }
+
+    //Used to ensure levels progress naturally.
     public static void LevelComplete()
     {
         howManyLevelsDone++;
     }
-
+    //Same.
     public static int HowMany()
     {
         return howManyLevelsDone;
