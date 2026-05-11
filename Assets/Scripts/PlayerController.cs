@@ -8,6 +8,7 @@ using UnityEngine.Audio;
 using UnityEngine.InputSystem;
 using UnityEngine.SceneManagement;
 using UnityEngine.UI;
+using UnityEngine.UIElements;
 
 public class PlayerController : MonoBehaviour
 {
@@ -23,12 +24,16 @@ public class PlayerController : MonoBehaviour
     private Collider[] rampCollider;
     private bool isHolding;
     private bool canHold;
-
+    [SerializeField] private GameObject PauseMenu;
+    private bool isPaused;
+    private static int howManyLevelsDone;
+    [SerializeField] AudioSource playSound;
     // Start is called once before the first execution of Update after the MonoBehaviour is created
     void Start()
     {
         isHolding = false;
         canHold = true;
+        isPaused = false;
         rb = GetComponent<Rigidbody>();
         move = InputSystem.actions.FindAction("Move");
         carry = InputSystem.actions.FindAction("Interact");
@@ -51,12 +56,12 @@ public class PlayerController : MonoBehaviour
                 if (rampCollider.Length >= 1)
                 {
 
-                    rampCollider[0].transform.position = new Vector3(player.transform.position.x,
-                        player.transform.position.y, player.transform.position.z + 2);
+                    rampCollider[0].transform.position = new Vector3(rampCollider[0].transform.position.x,
+                        player.transform.position.y, rampCollider[0].transform.position.z);
                     rampCollider[0].transform.SetParent(player.transform);
                     rampCollider[0].GetComponent<Rigidbody>().isKinematic = true;
                     rampCollider[0].GetComponent<MeshCollider>().isTrigger = true;
-
+                    playSound.Play();
                     isHolding = true;
                 }
             }
@@ -64,7 +69,7 @@ public class PlayerController : MonoBehaviour
             {
                 rampCollider[0].GetComponent<Rigidbody>().isKinematic = false;
                 rampCollider[0].GetComponent<MeshCollider>().isTrigger = false;
-
+                playSound.Play();
                 rampCollider[0].transform.SetParent(null);
                 rampCollider = null;
                 isHolding = false;
@@ -121,12 +126,42 @@ public class PlayerController : MonoBehaviour
             SceneManager.LoadScene(SceneManager.GetActiveScene().name);
         }
 
+        //Opens pause menu.
+        if (Input.GetKeyDown(KeyCode.P))
+        {
+            if (isPaused)
+            {
+                unpause();
+            }
+            else
+            {
+                Time.timeScale = 0;
+                isPaused = true;
+                PauseMenu.SetActive(true);
+            }
+        }
+
         //Moves the player at a consistent speed.
         moveDirection = move.ReadValue<Vector2>();
         rb.linearVelocity = transform.TransformDirection(new Vector3(moveDirection.x * playerSpeed, rb.linearVelocity.y,
             moveDirection.y * playerSpeed));
     }
 
+    public void unpause()
+    {
+        Time.timeScale = 1;
+        isPaused = false;
+        PauseMenu.SetActive(false);
+    }
+    public static void LevelComplete()
+    {
+        howManyLevelsDone++;
+    }
+
+    public static int HowMany()
+    {
+        return howManyLevelsDone;
+    }
 
 
 
